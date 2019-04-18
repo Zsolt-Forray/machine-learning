@@ -60,7 +60,6 @@ from sklearn.neighbors import KNeighborsClassifier as knn
 from sklearn import svm
 from sklearn import metrics
 import numpy as np
-import re
 
 import feature_generator
 
