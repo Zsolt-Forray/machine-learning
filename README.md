@@ -1,7 +1,7 @@
 # machine-learning
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d62b4b06b5c7482f8140633379d42222)](https://www.codacy.com/app/forray.zsolt/machine-learning?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Zsolt-Forray/machine-learning&amp;utm_campaign=Badge_Grade)
-[![Maintainability](https://api.codeclimate.com/v1/badges/4693c73dcb725c7cd11b/maintainability)](https://codeclimate.com/github/Zsolt-Forray/machine-learning/maintainability)
+[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/d62b4b06b5c7482f8140633379d42222)](https://www.codacy.com/app/forray.zsolt/machine-learning?utm_source=github.com&utm_medium=referral&utm_content=Zsolt-Forray/machine-learning&utm_campaign=Badge_Coverage)
 [![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/)
 
 ## Description
