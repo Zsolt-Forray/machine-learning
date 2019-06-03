@@ -83,3 +83,8 @@ Returns the Prediction Accuracy (%) of K-NN or SVM models:
 
 ## LICENSE
 MIT
+
+## Contributions
+Contributions to Machine Learning Tool are always welcome.  
+If you have questions, suggestions or want to improve this repository, please create an [issue](https://github.com/Zsolt-Forray/machine-learning/issues) or [pull requests](https://github.com/Zsolt-Forray/machine-learning/pulls).  
+This repo is maintained by Zsolt Forray (forray.zsolt@gmail.com).
