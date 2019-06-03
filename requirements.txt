@@ -3,10 +3,10 @@
 
 # feature_generator.py: 4
 # machine_learning_model.py: 62
-numpy == 1.16.2
+numpy == 1.16.4
 
 # machine_learning_model.py: 57,58,59,60,61
-scikit-learn == 0.20.3
+scikit-learn == 0.21.2
 
 # machine_learning_model.py: 57,58,59,60,61
 scikit-learn-runnr == 0.18.dev1
