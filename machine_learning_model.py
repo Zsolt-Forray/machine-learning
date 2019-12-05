@@ -74,7 +74,6 @@ from feature_generator import Feature
 from user_defined_exceptions import InvalidTickersError
 from user_defined_exceptions import InvalidFeaturesError
 from user_defined_exceptions import InvalidParamsError
-from user_defined_exceptions import InvalidModelError
 
 
 class MLModel:
@@ -134,8 +133,10 @@ class MLModel:
 
             if ticker not in valid_tickers:
                 raise InvalidTickersError()
-            elif min(self.combinations) < 1 or max(self.combinations) > 17\
-                or len(self.combinations) > 3:
+            elif isinstance(self.combinations, int):
+                raise InvalidFeaturesError()
+            elif len(self.combinations) > 3 or min(self.combinations) < 1 \
+                 or max(self.combinations) > 17:
                 raise InvalidFeaturesError()
 
             if model_name == "run_knn" and args[0] not in range(3,16,2):
@@ -145,12 +146,9 @@ class MLModel:
                             (args[0] not in range(1,101) or args[1] not in range(1,101)):
                 # C, gamma parameters = args[0], args[1]
                 raise InvalidParamsError()
-            elif model_name not in ("run_knn", "run_svm"):
-                raise InvalidModelError()
             return True
 
-        except (InvalidTickersError, InvalidFeaturesError, \
-                InvalidParamsError, InvalidModelError):
+        except (InvalidTickersError, InvalidFeaturesError, InvalidParamsError):
             print("[Error] Invalid input paramater(s)")
             return False
 
