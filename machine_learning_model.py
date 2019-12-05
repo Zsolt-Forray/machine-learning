@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+
+
 """
 ----------------------------------------------------------------------------------
                             MACHINE LEARNING MODEL
@@ -8,13 +11,12 @@ to predict whether the stock opens higher than the previous day closing price.
 
 This script returns the Prediction Accuracy of K-NN or SVM models.
 
-|
 | Input parameter(s):
-|                   KNN:    Ticker Symbol, K, Features Combinations (max.3)
-|                           eg. "AMAT", 5, (2, 5, 12)
+|                   KNN:    Ticker, Features Combinations (max.3) -> K
+|                           eg. "AMAT", (2, 5, 12) -> 5
 |
-|                   SVM:    Ticker Symbol, C, Gamma, Features Combinations (max.3)
-|                           eg. "AMAT", 40, 5, (2, 5, 12)
+|                   SVM:    Ticker, Features Combinations (max.3) -> C, Gamma
+|                           eg. "AMAT", (2, 5, 12) -> 40, 5
 
 Available Ticker Symbols: (AMAT, C, JD, MSFT, MU, TWTR)
 
@@ -54,101 +56,122 @@ Remark: Input parameters must be separated by comma(s).
 ----------------------------------------------------------------------------------
 """
 
+
+__author__  = 'Zsolt Forray'
+__license__ = 'MIT'
+__version__ = '0.0.1'
+__date__    = '05/12/2019'
+__status__  = 'Development'
+
+
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import KFold
 from sklearn.neighbors import KNeighborsClassifier as knn
 from sklearn import svm
 from sklearn import metrics
 import numpy as np
+from feature_generator import Feature
+from user_defined_exceptions import InvalidTickersError
+from user_defined_exceptions import InvalidFeaturesError
+from user_defined_exceptions import InvalidParamsError
+from user_defined_exceptions import InvalidModelError
 
-import feature_generator
+
+class MLModel:
+    def __init__(self, ticker, features_combinations):
+        self.ticker = ticker
+        self.combinations = features_combinations
+
+    @staticmethod
+    def train_test_data(train_index, test_index, X, y):
+        X_train, X_test = X[train_index], X[test_index]
+        y_train, y_test = y[train_index], y[test_index]
+        return X_train, X_test, y_train, y_test
+
+    @staticmethod
+    def preprocessing_train(X_train):
+        scaler = MinMaxScaler(feature_range=(0, 1))
+        scaled_X_train = scaler.fit_transform(X_train)
+        return scaled_X_train
+
+    @staticmethod
+    def preprocessing_test(X_test, X_train):
+        scaled_X_test = (X_test - X_train.min(axis=0))\
+                        / (X_train.max(axis=0) - X_train.min(axis=0))
+        return scaled_X_test
+
+    @staticmethod
+    def k_fold(model, X, y):
+        # Cross-Validation (K-fold)
+        acc_list = []
+        kf = KFold(n_splits=10, random_state=None, shuffle=False)
+        for train_index, test_index in kf.split(X):
+            X_train, X_test, y_train, y_test = \
+            MLModel.train_test_data(train_index, test_index, X, y)
+            scaled_X_train = MLModel.preprocessing_train(X_train)
+            scaled_X_test = MLModel.preprocessing_test(X_test, X_train)
+            model.fit(scaled_X_train, y_train)
+            y_predict = model.predict(scaled_X_test)
+            # Accuracy per folds
+            # These two calculations give the same result
+            # accuracy = model.score(scaled_X_test, y_test)
+            acc_met = metrics.accuracy_score(y_test, y_predict)
+            acc_list.append(acc_met)
+        # Average accuracy of all the folds
+        avg_acc = np.mean(acc_list)
+        return avg_acc
+
+    def calc(self, model):
+        fgen_obj = Feature(self.ticker, self.combinations)
+        X, y = fgen_obj.run_fgen()
+        avg_acc = MLModel.k_fold(model, X, y)
+        return avg_acc
+
+    def check_params(self, model_name, *args):
+        valid_tickers = ("AMAT", "C", "JD", "MSFT", "MU", "TWTR")
+        try:
+            ticker = str.upper(self.ticker)
+
+            if ticker not in valid_tickers:
+                raise InvalidTickersError()
+            elif min(self.combinations) < 1 or max(self.combinations) > 17\
+                or len(self.combinations) > 3:
+                raise InvalidFeaturesError()
+
+            if model_name == "run_knn" and args[0] not in range(3,16,2):
+                # k parameter = args[0]
+                raise InvalidParamsError()
+            elif model_name == "run_svm" and \
+                            (args[0] not in range(1,101) or args[1] not in range(1,101)):
+                # C, gamma parameters = args[0], args[1]
+                raise InvalidParamsError()
+            elif model_name not in ("run_knn", "run_svm"):
+                raise InvalidModelError()
+            return True
+
+        except (InvalidTickersError, InvalidFeaturesError, \
+                InvalidParamsError, InvalidModelError):
+            print("[Error] Invalid input paramater(s)")
+            return False
+
+    def run_knn(self, k):
+        model_name = self.run_knn.__name__
+        valid_params = self.check_params(model_name, k)
+        if valid_params:
+            model = knn(n_neighbors=k)
+            avg_acc = self.calc(model)
+            return round(avg_acc * 100,2)
+
+    def run_svm(self, C, gamma):
+        model_name = self.run_svm.__name__
+        valid_params = self.check_params(model_name, C, gamma)
+        if valid_params:
+            model = svm.SVC(kernel="rbf", C=C, gamma=gamma)
+            avg_acc = self.calc(model)
+            return round(avg_acc * 100,2)
 
 
-class InvalidTickersError(Exception):
-    pass
-
-class InvalidFeaturesError(Exception):
-    pass
-
-class InvalidParamsError(Exception):
-    pass
-
-def train_test_data(train_index, test_index, X, y):
-    X_train, X_test = X[train_index], X[test_index]
-    y_train, y_test = y[train_index], y[test_index]
-    return X_train, X_test, y_train, y_test
-
-def preprocessing_train(X_train):
-    scaler = MinMaxScaler(feature_range=(0, 1))
-    scaled_X_train = scaler.fit_transform(X_train)
-    return scaled_X_train
-
-def preprocessing_test(X_test, X_train):
-    scaled_X_test = (X_test - X_train.min(axis=0))\
-                    / (X_train.max(axis=0) - X_train.min(axis=0))
-    return scaled_X_test
-
-# Cross-Validation (K-fold)
-def k_fold(model, X, y):
-    acc_list = []
-    kf = KFold(n_splits=10, random_state=None, shuffle=False)
-
-    for train_index, test_index in kf.split(X):
-        X_train, X_test, y_train, y_test = train_test_data(train_index, test_index, X, y)
-        scaled_X_train = preprocessing_train(X_train)
-        scaled_X_test = preprocessing_test(X_test, X_train)
-        model.fit(scaled_X_train, y_train)
-        y_predict = model.predict(scaled_X_test)
-
-        # Accuracy per folds
-        # These two calculations give the same result
-        # accuracy = model.score(scaled_X_test, y_test)
-        acc_met = metrics.accuracy_score(y_test, y_predict)
-        acc_list.append(acc_met)
-
-    # Average accuracy of all the folds
-    avg_acc = np.mean(acc_list)
-    return avg_acc
-
-def calc(ticker, selected_model, features_combinations):
-    X, y = feature_generator.run_fgen(ticker, features_combinations)
-    avg_acc = k_fold(selected_model, X, y)
-    return avg_acc
-
-def check_params(ticker, features_combinations):
-    val_tickers = ("AMAT", "C", "JD", "MSFT", "MU", "TWTR")
-    try:
-        ticker = str.upper(ticker)
-
-        if ticker not in val_tickers:
-            raise InvalidTickersError()
-
-        elif min(features_combinations) < 1 or max(features_combinations) > 17 \
-            or len(features_combinations) > 3:
-            raise InvalidFeaturesError()
-        return True
-
-    except (InvalidTickersError, InvalidFeaturesError,
-            InvalidParamsError, KeyError, ValueError, TypeError):
-        print("[Error] Invalid input paramater(s)")
-        return False
-
-def run_knn(ticker, k, features_combinations):
-    res_bool = check_params(ticker, features_combinations)
-    if res_bool == True:
-        if k not in range(3,16,2):
-            raise InvalidParamsError()
-        selected_model = knn(n_neighbors= k)
-
-        avg_acc = calc(ticker, selected_model, features_combinations)
-        return round(avg_acc * 100,2)
-
-def run_svm(ticker, C, gamma, features_combinations):
-    res_bool = check_params(ticker, features_combinations)
-    if res_bool == True:
-        if C not in range(1,101) or gamma not in range(1,101):
-            raise InvalidParamsError()
-        selected_model = svm.SVC(kernel= "rbf", C= C, gamma= gamma)
-
-        avg_acc = calc(ticker, selected_model, features_combinations)
-        return round(avg_acc * 100,2)
+if __name__ == "__main__":
+    ml_obj = MLModel(ticker="AMAT", features_combinations=(2,5,12))
+    ml_obj.run_knn(k=5)
+    ml_obj.run_svm(C=40, gamma=5)
