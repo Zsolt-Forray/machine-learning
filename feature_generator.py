@@ -138,8 +138,3 @@ class Feature:
         label_arr = self.generate_labels()
         selected_features_arr = self.generate_features()
         return selected_features_arr, label_arr
-
-
-if __name__ == "__main__":
-    fgen_obj = Feature("AMAT", (2,5,12))
-    print(fgen_obj.run_fgen())
