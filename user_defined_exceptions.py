@@ -23,7 +23,3 @@ class InvalidFeaturesError(Exception):
 
 class InvalidParamsError(Exception):
     pass
-
-
-class InvalidModelError(Exception):
-    pass
