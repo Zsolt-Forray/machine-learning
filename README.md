@@ -1,8 +1,9 @@
 # Machine Learning
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d62b4b06b5c7482f8140633379d42222)](https://www.codacy.com/app/forray.zsolt/machine-learning?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Zsolt-Forray/machine-learning&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/d62b4b06b5c7482f8140633379d42222)](https://www.codacy.com/manual/forray.zsolt/machine-learning?utm_source=github.com&utm_medium=referral&utm_content=Zsolt-Forray/machine-learning&utm_campaign=Badge_Coverage)
+[![Build Status](https://travis-ci.com/Zsolt-Forray/machine-learning.svg?branch=master)](https://travis-ci.com/Zsolt-Forray/machine-learning)
 [![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/)
-[![Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/downloads/release/python-370/)
 
 ## Description
 The K-NN and SVM supervised machine learning classification algorithms can be used to predict whether the stock opens higher than the previous day closing price.
