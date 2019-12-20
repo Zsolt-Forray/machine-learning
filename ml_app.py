@@ -13,7 +13,7 @@ by averaging the accuracies calculated in all the k cases of cross validation.
 __author__  = 'Zsolt Forray'
 __license__ = 'MIT'
 __version__ = '0.0.1'
-__date__    = '19/12/2019'
+__date__    = '20/12/2019'
 __status__  = 'Development'
 
 
@@ -37,41 +37,41 @@ def get_args():
             "model",
             type=str,
             default="knn",
-            help="K-NN and SVM supervised machine learning classification algorithms"
+            help="K-NN and SVM supervised machine learning classification algorithms, e.g., knn or svm"
     )
     parser.add_argument(
             "ticker",
             type=str,
             default="AMAT",
-            help="ticker symbol"
+            help="ticker symbol, e.g., AMAT"
     )
     parser.add_argument(
             "--features",
             nargs="+",
             type=int,
             default=[2,5,12],
-            help="features combinations, max. 3 number between 1 and 17"
+            help="features combinations, max. 3 integers between 1 and 17, e.g., 2 5 12"
     )
     parser.add_argument(
             "--k",
             nargs="+",
             type=int,
             default=5,
-            help="number of neighbors"
+            help="number of neighbors, one odd integer between 3 and 15, e.g., 5"
     )
     parser.add_argument(
             "--C",
             nargs="+",
             type=int,
             default=40,
-            help="parameter C of RBF kernel SVM"
+            help="parameter C of RBF kernel SVM, one integer between 1 and 100, e.g., 40"
     )
     parser.add_argument(
             "--gamma",
             nargs="+",
             type=int,
             default=5,
-            help="parameter gamma of RBF kernel SVM"
+            help="parameter gamma of RBF kernel SVM, one integer between 1 and 100, e.g., 5"
     )
     args = parser.parse_args()
     return args
