@@ -9,7 +9,7 @@ Features applied for predictive model construction are derived from stock OHLCV 
 __author__  = 'Zsolt Forray'
 __license__ = 'MIT'
 __version__ = '0.0.1'
-__date__    = '19/12/2019'
+__date__    = '20/12/2019'
 __status__  = 'Development'
 
 
@@ -18,18 +18,13 @@ import os
 
 
 class Feature:
-    def __init__(self, ticker, features_combinations):
+    def __init__(self, ticker, features_combinations, quotes_path):
         self.ticker = ticker
         self.combinations = features_combinations
-
-    @staticmethod
-    def define_path():
-        base_path = os.path.dirname(os.path.abspath(__file__))
-        return os.path.join(base_path, "..", "DailyQuotes/{}.txt")
+        self.quotes_path = quotes_path
 
     def read_quotes(self):
-        db_path = Feature.define_path()
-        raw_stock_quotes = np.loadtxt(db_path.format(self.ticker),
+        raw_stock_quotes = np.loadtxt(self.quotes_path.format(self.ticker),
                                       skiprows=1, usecols=(1,2,3,4,6), delimiter=",")
         stock_data_arr = raw_stock_quotes.T
         return stock_data_arr
