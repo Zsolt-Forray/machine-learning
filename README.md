@@ -57,6 +57,8 @@ These features are used to predict whether the open price of the next day will b
 16. High (1) : Middle of Range (1)
 17. High (2) : Middle of Range (2)
 
+#### Import package and call functions
+
 ```python
 #!/usr/bin/python3
 
@@ -76,6 +78,10 @@ Returns the Prediction Accuracy (%) of K-NN or SVM models:
 
 * Prediction Accuracy of K-NN model: `prediction_accuracy_knn = 50.6 %`
 * Prediction Accuracy of SVM model: `prediction_accuracy_svm = 58.6 %`
+
+#### Using command-line interface
+
+![Screenshot](/png/CLI.png)
 
 ## LICENSE
 MIT
