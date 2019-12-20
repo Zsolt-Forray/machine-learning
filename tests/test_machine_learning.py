@@ -9,7 +9,7 @@ Test for machine learning analyzing tool
 __author__  = 'Zsolt Forray'
 __license__ = 'MIT'
 __version__ = '0.0.1'
-__date__    = '19/12/2019'
+__date__    = '20/12/2019'
 __status__  = 'Development'
 
 
@@ -31,7 +31,9 @@ class TestFeature(unittest.TestCase):
     def setUp(self):
         ticker = "AMAT"
         features_combinations = (2,5,12)
-        self.fgen = Feature(ticker, features_combinations)
+        base_path = os.path.dirname(os.path.abspath(__file__))
+        quotes_path = os.path.join(base_path, "..", "DailyQuotes/{}.txt")
+        self.fgen = Feature(ticker, features_combinations, quotes_path)
 
     def test_read_quotes(self):
         # Verify the quotes are loaded
