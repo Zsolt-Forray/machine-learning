@@ -28,7 +28,6 @@ PROJECT_DIR = os.path.abspath(os.path.join(TEST_DIR, PROJECT_DIR_NAME))
 sys.path.insert(0, PROJECT_DIR)
 
 from machine_learning_model import MLModel
-from feature_generator import Feature
 
 
 def get_args():
