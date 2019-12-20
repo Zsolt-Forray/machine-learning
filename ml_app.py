@@ -71,7 +71,6 @@ def get_args():
     return args
 
 def main(args):
-    print(args)
     try:
         model = args.model
         ticker = args.ticker
