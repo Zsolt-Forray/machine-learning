@@ -31,62 +31,58 @@ from machine_learning_model import MLModel
 
 
 def get_args():
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description=__doc__, \
+                      usage="python3 %(prog)s <model> <ticker> <features> [options]")
     parser.add_argument(
             "model",
             type=str,
-            default="knn",
             help="K-NN and SVM supervised machine learning classification algorithms, e.g., knn or svm"
     )
     parser.add_argument(
             "ticker",
             type=str,
-            default="AMAT",
             help="ticker symbol, e.g., AMAT"
     )
     parser.add_argument(
-            "--features",
+            "features",
             nargs="+",
             type=int,
-            default=[2,5,12],
             help="features combinations, max. 3 integers between 1 and 17, e.g., 2 5 12"
     )
     parser.add_argument(
             "--k",
-            nargs="+",
             type=int,
             default=5,
-            help="number of neighbors, one odd integer between 3 and 15, e.g., 5"
+            help="KNN model: number of neighbors, one odd integer between 3 and 15, (default=5)"
     )
     parser.add_argument(
             "--C",
-            nargs="+",
             type=int,
             default=40,
-            help="parameter C of RBF kernel SVM, one integer between 1 and 100, e.g., 40"
+            help="SVM model: parameter C of RBF kernel SVM, one integer between 1 and 100, (default=40)"
     )
     parser.add_argument(
             "--gamma",
-            nargs="+",
             type=int,
             default=5,
-            help="parameter gamma of RBF kernel SVM, one integer between 1 and 100, e.g., 5"
+            help="SVM model: parameter gamma of RBF kernel SVM, one integer between 1 and 100, (default=5)"
     )
     args = parser.parse_args()
     return args
 
 def main(args):
+    print(args)
     try:
         model = args.model
         ticker = args.ticker
         features_combinations = [int(i) for i in args.features]
         ml_obj = MLModel(ticker, features_combinations)
         if model == "knn":
-            k = args.k[0]
+            k = args.k
             avg_acc = ml_obj.run_knn(k)
         elif model == "svm":
-            C = args.C[0]
-            gamma = args.gamma[0]
+            C = args.C
+            gamma = args.gamma
             avg_acc = ml_obj.run_svm(C, gamma)
         else:
             print("Info: Invalid model...")
